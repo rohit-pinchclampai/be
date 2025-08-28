@@ -1,4 +1,4 @@
-from .config import settings
+from .services.rag.config import settings
 from .services.embedder import Embedder
 from .services.store import Store
 from .services.groq_llm import GroqLLM
