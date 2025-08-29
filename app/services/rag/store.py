@@ -1,7 +1,7 @@
 from pinecone import Pinecone, ServerlessSpec
 from typing import List, Dict
 import app.services.rag.config
-from embedder import create_embeddings
+from app.services.rag.embedder import create_embeddings
 
 pc = Pinecone(api_key=config.PINECONE_API_KEY)
 
