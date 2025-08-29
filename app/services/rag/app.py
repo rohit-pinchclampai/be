@@ -6,10 +6,10 @@ from datetime import datetime, timedelta
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 
-from chunker import load_document, chunk_documents
-from embedder import generate_embeddings
-from store import upload_embeddings_to_pinecone, query_pinecone, index
-from groq_llm import groq_answer
+from app.services.rag.chunker import load_document, chunk_documents
+from app.services.rag.embedder import generate_embeddings
+from app.services.rag.store import upload_embeddings_to_pinecone, query_pinecone, index
+from app.services.rag.groq_llm import groq_answer
 
 # -----------------------------
 # Config
