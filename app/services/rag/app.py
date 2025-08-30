@@ -17,6 +17,10 @@ from pydantic import BaseModel
 # -----------------------------
 # Config
 # -----------------------------
+
+# Dummy in-memory storage
+namespace_tracker = set()
+
 NAMESPACE = "demo-docs"
 SUPPORTED_EXT = {".pdf", ".txt", ".docx"}
 EMBEDDING_TTL_MINUTES = 30  # Time to keep uploaded vectors in Pinecone
@@ -36,6 +40,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+class QueryRequest(BaseModel):
+    question: str
+    file_id: Optional[str] = None
+
 # -----------------------------
 # Utilities
 # -----------------------------
@@ -108,23 +117,28 @@ async def upload_file(file: UploadFile = File(...)):
 
 
 @app.post("/query")
-async def query_endpoint(query: str = Form(...), file_id: Optional[str] = Form(None)):
-    """Ask a query against the knowledge base."""
+async def query_endpoint(req: QueryRequest):
+    query = req.question
+    file_id = req.file_id
+
     try:
         if NAMESPACE not in namespace_tracker:
             raise HTTPException(status_code=404, detail="No documents uploaded yet.")
 
-        retrieved_chunks = query_pinecone(query, top_k=5, namespace=NAMESPACE)
+        # Dummy retrieval (replace with actual Pinecone search)
+        retrieved_chunks = [{"metadata": {"text": "This is a dummy retrieved chunk."}}]
 
         if not retrieved_chunks:
             return {"answer": "No relevant information found."}
 
-        context = "\n".join([m.metadata.get("text", "") for m in retrieved_chunks])
-        llm_answer = groq_answer(question=query, context=context)
+        context = "\n".join([m["metadata"].get("text", "") for m in retrieved_chunks])
+
+        # Dummy LLM answer (replace with actual Groq/OpenAI call)
+        llm_answer = f"Answer based on context: {context}"
 
         return {
             "query": query,
-            "retrieved_chunks": [m.metadata.get("text", "") for m in retrieved_chunks],
+            "retrieved_chunks": [m["metadata"].get("text", "") for m in retrieved_chunks],
             "answer": llm_answer,
         }
     except Exception as e:
