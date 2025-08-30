@@ -21,8 +21,17 @@ EMBEDDING_TTL_MINUTES = 30  # Time to keep uploaded vectors in Pinecone
 # In-memory tracker for uploaded namespaces and expiration
 namespace_tracker = {}
 
-app = FastAPI(title="PinchClampAI RAG API - Railway Ready")
 
+app = FastAPI(title="RAG Backend (Groq + Pinecone)")
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://pinchclampai.com"],  # your frontend domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # -----------------------------
 # Utilities
 # -----------------------------
