@@ -28,7 +28,7 @@ app = FastAPI(title="RAG Backend (Groq + Pinecone)")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://pinchclampai.com"],  # your frontend domain
+    allow_origins=["https://pinchclampai.com", "https://www.pinchclampai.com",],  # your frontend domain
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
