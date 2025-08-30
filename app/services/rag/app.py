@@ -2,12 +2,10 @@ import os
 import tempfile
 import asyncio
 from datetime import datetime, timedelta
-from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
-# Replace these imports with your actual modules
 from app.services.rag.chunker import load_document, chunk_documents
 from app.services.rag.embedder import generate_embeddings
 from app.services.rag.store import upload_embeddings_to_pinecone, query_pinecone, index
