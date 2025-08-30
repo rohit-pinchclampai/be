@@ -6,8 +6,19 @@ from .utils.loaders import sniff_and_load
 from .deps import embedder, store, llm
 from hashlib import md5
 from typing import List
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(title="RAG Backend (Groq + Pinecone)")
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # or your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/health")
 def health():
