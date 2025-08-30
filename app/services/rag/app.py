@@ -10,6 +10,7 @@ from app.services.rag.chunker import load_document, chunk_documents
 from app.services.rag.embedder import generate_embeddings
 from app.services.rag.store import upload_embeddings_to_pinecone, query_pinecone, index
 from app.services.rag.groq_llm import groq_answer
+from fastapi.middleware.cors import CORSMiddleware
 
 # -----------------------------
 # Config
