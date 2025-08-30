@@ -31,15 +31,11 @@ app = FastAPI(title="PinchClampAI RAG API - Render/Netlify Ready")
 # -----------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://pinchclampai.com",  # ✅ production frontend
-        "http://localhost:3000",     # ✅ local dev
-    ],
+    allow_origins=["*"],   # 👈 allow everything
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # -----------------------------
 # Utilities
 # -----------------------------
