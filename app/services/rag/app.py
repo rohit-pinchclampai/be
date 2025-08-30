@@ -121,23 +121,25 @@ async def upload_file(file: UploadFile = File(...)):
 # -----------------------------
 # Query Endpoint
 # -----------------------------
-@app.post("/query", response_model=QueryResponse)
-async def query_endpoint(req: QueryRequest):
+@app.post("/query")
+async def query_endpoint(query: str = Form(...)):
+    """Ask a query against the knowledge base."""
     if NAMESPACE not in namespace_tracker:
-        return QueryResponse(answer="No documents uploaded yet.", retrieved_chunks=[])
+        return {"answer": "No documents uploaded yet."}
 
-    retrieved_chunks = query_pinecone(req.query, top_k=5, namespace=NAMESPACE)
+    retrieved_chunks = query_pinecone(query, top_k=5, namespace=NAMESPACE)
+
     if not retrieved_chunks:
-        return QueryResponse(answer="No relevant information found.", retrieved_chunks=[])
+        return {"answer": "No relevant information found."}
 
     context = "\n".join([m.metadata.get("text", "") for m in retrieved_chunks])
-    llm_answer = groq_answer(question=req.query, context=context)
+    llm_answer = groq_answer(question=query, context=context)
 
-    return QueryResponse(
-        answer=llm_answer,
-        retrieved_chunks=[m.metadata.get("text", "") for m in retrieved_chunks]
-    )
-
+    return {
+        "query": query,
+        "retrieved_chunks": [m.metadata.get("text", "") for m in retrieved_chunks],
+        "answer": llm_answer,
+    }
 # -----------------------------
 # Run locally
 # -----------------------------
