@@ -8,10 +8,10 @@ from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from chunker import load_document, chunk_documents
-from embedder import generate_embeddings
-from store import upload_embeddings_to_pinecone, query_pinecone, index
-from groq_llm import groq_answer
+from app.services.rag.chunker import load_document, chunk_documents
+from app.services.rag.embedder import generate_embeddings
+from app.services.rag.store import upload_embeddings_to_pinecone, query_pinecone, index
+from app.services.rag.groq_llm import groq_answer
 from pydantic import BaseModel 
 
 # -----------------------------
