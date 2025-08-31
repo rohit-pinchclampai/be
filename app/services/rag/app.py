@@ -121,28 +121,26 @@ async def query_endpoint(req: QueryRequest):
     query = req.question
     file_id = req.file_id
 
-    try:
-        if NAMESPACE not in namespace_tracker:
-            raise HTTPException(status_code=404, detail="No documents uploaded yet.")
+    if NAMESPACE not in namespace_tracker:
+        raise HTTPException(status_code=404, detail="No documents uploaded yet.")
 
-        # Dummy retrieval (replace with actual Pinecone search)
-        retrieved_chunks = [{"metadata": {"text": "This is a dummy retrieved chunk."}}]
+    try:
+        retrieved_chunks = query_pinecone(query, top_k=5, namespace=NAMESPACE)
 
         if not retrieved_chunks:
             return {"answer": "No relevant information found."}
 
-        context = "\n".join([m["metadata"].get("text", "") for m in retrieved_chunks])
-
-        # Dummy LLM answer (replace with actual Groq/OpenAI call)
-        llm_answer = f"Answer based on context: {context}"
+        context = "\n".join([m.metadata.get("text", "") for m in retrieved_chunks])
+        llm_answer = groq_answer(question=query, context=context)
 
         return {
             "query": query,
-            "retrieved_chunks": [m["metadata"].get("text", "") for m in retrieved_chunks],
+            "retrieved_chunks": [m.metadata.get("text", "") for m in retrieved_chunks],
             "answer": llm_answer,
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Query failed: {str(e)}")
+
 
 
 # -----------------------------
